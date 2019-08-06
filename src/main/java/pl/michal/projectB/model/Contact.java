@@ -3,12 +3,16 @@ package pl.michal.projectB.model;
 import java.util.UUID;
 
 public class Contact {
-    enum ContactType {
+    public enum ContactType {
         unknown(0), email(1), phone(2), jabber(3);
         private int value;
 
-        private ContactType(int value) {
+        ContactType(int value) {
             this.value = value;
+        }
+
+        public int getValue() {
+            return value;
         }
     }
 
@@ -21,17 +25,20 @@ public class Contact {
         this.id = UUID.randomUUID();
         this.customerId = customerId;
         this.contact = contact;
-        this.contactType = ContactType.unknown;
+        this.contactType = chooseContactType(contact);
+    }
 
+    private ContactType chooseContactType(String contact) {
         if (isEmail(contact)) {
-            this.contactType = ContactType.email;
+            return ContactType.email;
         }
         if (isPhone(contact)) {
-            this.contactType = ContactType.phone;
+            return ContactType.phone;
         }
         if (isJabber(contact)) {
-            this.contactType = ContactType.jabber;
+            return ContactType.jabber;
         }
+        return ContactType.unknown;
     }
 
     private boolean isJabber(String contact) {
@@ -46,5 +53,35 @@ public class Contact {
     private boolean isPhone(String phone) {
         String phoneNumberWithoutSpace = phone.replaceAll(" ", "");
         return phoneNumberWithoutSpace.length() == 9;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public UUID getCustomerId() {
+        return customerId;
+    }
+
+    public ContactType getContactType() {
+        return contactType;
+    }
+
+    public String getContact() {
+        return contact;
+    }
+
+    public void setCustomerId(UUID customerId) {
+        this.customerId = customerId;
+    }
+
+    @Override
+    public String toString() {
+        return "Contact{" +
+                "id=" + id +
+                ", customerId=" + customerId +
+                ", contactType=" + contactType +
+                ", contact='" + contact + '\'' +
+                '}';
     }
 }
